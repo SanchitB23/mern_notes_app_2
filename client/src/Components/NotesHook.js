@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import Axios from "axios";
 import shortid from "shortid";
 import MidHook from "./MidHook";
+import CONSTANTS from "../constants";
+
 function NotesHook() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [notesobj, setNotesobj] = useState([]);
 
   useEffect(() => {
-    Axios.get("http://localhost:8080/")
-      .then((res) => {
-        setNotesobj(res.data);
-        // console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    Axios.get(CONSTANTS.baseURL)
+        .then((res) => {
+          setNotesobj(res.data);
+          // console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }, []);
 
   const handleSubmit = (e) => {
@@ -28,10 +30,10 @@ function NotesHook() {
       description: desc,
     };
     // console.log(entry);
-    Axios.post("http://localhost:8080/add", entry)
+    Axios.post(`${CONSTANTS.baseURL}add`, entry)
       .then((res) => {
         // console.log(res);
-        Axios.get("http://localhost:8080/")
+        Axios.get(CONSTANTS.baseURL)
           .then((res) => {
             setNotesobj(res.data);
           })
@@ -46,7 +48,7 @@ function NotesHook() {
     setDesc("");
   };
   const handledatacallback = (idi) => {
-    Axios.delete(`http://localhost:8080/delete/${idi}`)
+    Axios.delete(`${CONSTANTS.baseURL}delete/${idi}`)
       .then((res) => {
         setNotesobj(notesobj.filter((ele) => ele._id !== idi));
         // console.log(res);
